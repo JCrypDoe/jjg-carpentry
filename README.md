@@ -157,6 +157,8 @@ JOB_UPLOAD_DIR=/var/data/jobs
 APP_URL=https://your-service-domain
 ```
 
+The GitHub repository intentionally excludes local JSON records and uploaded job photos. A new hosted volume starts empty; transfer existing jobs and customer records separately or re-upload them through the admin dashboard. Public job APIs omit customer contact details.
+
 Keep `.env` and customer records private. The requested `JJG2026` password is suitable only for a private test; choose a longer, unique password before sharing the live admin login.
 
 ### Option C: VPS (DigitalOcean / Linode)
