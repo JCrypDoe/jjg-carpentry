@@ -12,6 +12,11 @@ function loadJobs() {
   catch { return []; }
 }
 
+function toPublicJob(job) {
+  const { id, title, description, category, date, location, image_url, thumbnail_url, created_at } = job;
+  return { id, title, description, category, date, location, image_url, thumbnail_url, created_at };
+}
+
 // GET all jobs (with optional category filter)
 router.get('/', (req, res) => {
   let jobs = loadJobs();
@@ -19,7 +24,7 @@ router.get('/', (req, res) => {
     jobs = jobs.filter(j => j.category.toLowerCase() === req.query.category.toLowerCase());
   }
   jobs.sort((a, b) => new Date(b.date) - new Date(a.date));
-  res.json({ success: true, jobs });
+  res.json({ success: true, jobs: jobs.map(toPublicJob) });
 });
 
 // GET single job
@@ -27,7 +32,7 @@ router.get('/:id', (req, res) => {
   const jobs = loadJobs();
   const job = jobs.find(j => j.id === req.params.id);
   if (!job) return res.status(404).json({ success: false, message: 'Job not found' });
-  res.json({ success: true, job });
+  res.json({ success: true, job: toPublicJob(job) });
 });
 
 module.exports = router;
