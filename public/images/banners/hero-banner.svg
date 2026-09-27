@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" fill="none">
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#0a1628"/>
+
+  <!-- Workbench surface -->
+  <rect x="0" y="480" width="1200" height="220" fill="#1a0f05"/>
+  <rect x="0" y="478" width="1200" height="8" fill="#8B6914" opacity="0.6"/>
+
+  <!-- Wood grain lines on bench -->
+  <line x1="0" y1="500" x2="1200" y2="500" stroke="#2a1a08" stroke-width="1" opacity="0.5"/>
+  <line x1="0" y1="520" x2="1200" y2="520" stroke="#2a1a08" stroke-width="1" opacity="0.3"/>
+  <line x1="0" y1="540" x2="1200" y2="540" stroke="#2a1a08" stroke-width="1" opacity="0.4"/>
+
+  <!-- Large hammer -->
+  <rect x="120" y="300" width="30" height="180" rx="8" fill="#5a3a1a"/>
+  <rect x="90" y="280" width="90" height="50" rx="10" fill="#8B6914"/>
+  <rect x="90" y="280" width="90" height="50" rx="10" fill="url(#hammerGrad)"/>
+
+  <!-- Saw -->
+  <rect x="300" y="350" width="200" height="20" rx="4" fill="#c9a84c"/>
+  <rect x="280" y="340" width="40" height="40" rx="6" fill="#8B6914"/>
+  <!-- Saw teeth -->
+  <path d="M300 370 L310 385 L320 370 L330 385 L340 370 L350 385 L360 370 L370 385 L380 370 L390 385 L400 370 L410 385 L420 370 L430 385 L440 370 L450 385 L460 370 L470 385 L480 370 L490 385 L500 370" stroke="#0a1628" stroke-width="2" fill="none"/>
+
+  <!-- Ruler -->
+  <rect x="550" y="440" width="400" height="30" rx="4" fill="#c9a84c" opacity="0.8"/>
+  <line x1="570" y1="440" x2="570" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="590" y1="440" x2="590" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="610" y1="440" x2="610" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="630" y1="440" x2="630" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="650" y1="440" x2="650" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="670" y1="440" x2="670" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="690" y1="440" x2="690" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="710" y1="440" x2="710" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="730" y1="440" x2="730" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="750" y1="440" x2="750" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="770" y1="440" x2="770" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="790" y1="440" x2="790" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="810" y1="440" x2="810" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="830" y1="440" x2="830" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="850" y1="440" x2="850" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="870" y1="440" x2="870" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="890" y1="440" x2="890" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+  <line x1="910" y1="440" x2="910" y2="450" stroke="#0a1628" stroke-width="1"/>
+  <line x1="930" y1="440" x2="930" y2="455" stroke="#0a1628" stroke-width="1.5"/>
+
+  <!-- Drill -->
+  <ellipse cx="900" cy="360" rx="40" ry="30" fill="#1e3a5f"/>
+  <rect x="860" y="350" width="80" height="20" rx="6" fill="#122040"/>
+  <rect x="930" y="354" width="60" height="12" rx="4" fill="#c9a84c"/>
+  <rect x="985" y="356" width="30" height="8" rx="2" fill="#8B6914"/>
+  <circle cx="900" cy="360" r="12" fill="#c9a84c" opacity="0.3"/>
+  <circle cx="900" cy="360" r="6" fill="#c9a84c" opacity="0.5"/>
+
+  <!-- Screwdriver -->
+  <rect x="700" y="300" width="12" height="140" rx="4" fill="#8B6914"/>
+  <rect x="696" y="290" width="20" height="20" rx="4" fill="#c9a84c"/>
+  <rect x="703" y="430" width="6" height="20" rx="1" fill="#c9a84c"/>
+
+  <!-- Paint brush -->
+  <rect x="1050" y="280" width="10" height="160" rx="3" fill="#8B6914"/>
+  <rect x="1044" y="420" width="22" height="30" rx="4" fill="#c9a84c" opacity="0.8"/>
+  <path d="M1044 450 Q1055 470 1066 450" fill="#c9a84c" opacity="0.6"/>
+
+  <!-- Warm light glow from above -->
+  <ellipse cx="600" cy="0" rx="500" ry="300" fill="#c9a84c" opacity="0.04"/>
+
+  <!-- Ambient light spots -->
+  <circle cx="200" cy="200" r="150" fill="#c9a84c" opacity="0.03"/>
+  <circle cx="1000" cy="300" r="200" fill="#c9a84c" opacity="0.03"/>
+
+  <!-- Tool shadow on bench -->
+  <ellipse cx="600" cy="485" rx="400" ry="10" fill="#000" opacity="0.2"/>
+
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="hammerGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+!.env.example
+data/*.json
+public/images/jobs/*
+!public/images/jobs/.gitkeep
+public/images/jobs/thumbs/*
+!public/images/jobs/thumbs/.gitkeep

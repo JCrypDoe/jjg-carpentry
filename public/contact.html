@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact — JJG Carpentry LLC</title>
+<meta content="Contact JJG Carpentry LLC for a free quote. Phone, email, and online quote request form. Serving Miami-Dade and Broward County, South Florida." name="description"/>
+<link href="/css/style.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .contact-info-card {
+      background: var(--navy);
+      border-radius: 20px;
+      padding: 36px;
+      color: var(--white);
+      position: sticky;
+      top: 100px;
+    }
+    .contact-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .contact-info-item:last-child { border-bottom: none; }
+    .contact-info-icon {
+      width: 48px; height: 48px;
+      background: rgba(201,168,76,0.15);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .contact-info-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 4px;
+    }
+    .contact-info-value {
+      font-size: 15px; color: var(--white); font-weight: 600;
+    }
+    .contact-info-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .form-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+    }
+    .form-tabs {
+      display: flex; gap: 4px;
+      background: var(--gray-light);
+      border-radius: 10px; padding: 4px;
+      margin-bottom: 32px;
+    }
+    .form-tab {
+      flex: 1; padding: 10px;
+      border: none; background: none;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700; font-size: 13px;
+      color: var(--gray-dark); cursor: pointer;
+      transition: all var(--transition);
+    }
+    .form-tab.active {
+      background: var(--white);
+      color: var(--navy);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-info-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+<div class="nav-inner">
+<a class="nav-logo" href="/">
+<div class="nav-logo-icon">JJG</div>
+<div class="nav-logo-text">
+<span class="nav-logo-name">JJG Carpentry LLC</span>
+<span class="nav-logo-tagline">South Florida's Handyman</span>
+</div>
+</a>
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/services">Services</a>
+<a href="/gallery">Gallery</a>
+<a href="/about">About</a>
+<a class="active" href="/contact">Contact</a>
+<a class="nav-cta" href="/contact#quote">Free Quote</a>
+</div>
+<div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+</div>
+</nav>
+<!-- Page Banner -->
+<div class="page-banner">
+<div class="page-banner-content container">
+<span class="section-label">Get In Touch</span>
+<h1>Contact Us</h1>
+<p>Ready to get started? Reach out for a free, no-obligation quote today.</p>
+<div class="breadcrumb">
+<a href="/">Home</a><span>›</span><span>Contact</span>
+</div>
+</div>
+</div>
+<!-- Contact Section -->
+<section class="section">
+<div class="container">
+<div class="contact-grid">
+<!-- Contact Info -->
+<div class="contact-info-card">
+<h3 style="color:var(--gold);font-size:20px;margin-bottom:4px;">JJG Carpentry LLC</h3>
+<p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:8px;">South Florida's Trusted Handyman</p>
+<div style="height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:20px;"></div>
+<div class="contact-info-item">
+<div class="contact-info-icon">📞</div>
+<div>
+<div class="contact-info-label">Phone</div>
+<div class="contact-info-value"><a href="tel:+13055550100" style="color:var(--white);">(305) 555-0100</a></div>
+<div class="contact-info-sub">Call or text anytime</div>
+</div>
+</div>
+<div class="contact-info-item">
+<div class="contact-info-icon">✉️</div>
+<div>
+<div class="contact-info-label">Email</div>
+<div class="contact-info-value"><a href="mailto:info@jjgcarpentry.com" style="color:var(--white);">info@jjgcarpentry.com</a></div>
+<div class="contact-info-sub">We reply within 2 hours</div>
+</div>
+</div>
+<div class="contact-info-item">
+<div class="contact-info-icon">📍</div>
+<div>
+<div class="contact-info-label">Service Area</div>
+<div class="contact-info-value">Miami-Dade &amp; Broward County</div>
+<div class="contact-info-sub">South Florida, FL</div>
+</div>
+</div>
+<div class="contact-info-item">
+<div class="contact-info-icon">🕐</div>
+<div>
+<div class="contact-info-label">Hours</div>
+<div class="contact-info-value">Mon – Sat: 7am – 7pm</div>
+<div class="contact-info-sub">Emergency calls accepted</div>
+</div>
+</div>
+<div class="contact-info-item">
+<div class="contact-info-icon">⚡</div>
+<div>
+<div class="contact-info-label">Response Time</div>
+<div class="contact-info-value">Same-Day Quotes</div>
+<div class="contact-info-sub">Fast turnaround guaranteed</div>
+</div>
+</div>
+<!-- Social -->
+<div style="margin-top:24px;">
+<div style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Follow Us</div>
+<div class="footer-social">
+<a class="social-btn" href="#"><i class="fab fa-facebook-f"></i></a>
+<a class="social-btn" href="#"><i class="fab fa-instagram"></i></a>
+<a class="social-btn" href="#"><i class="fab fa-google"></i></a>
+<a class="social-btn" href="#"><i class="fab fa-yelp"></i></a>
+</div>
+</div>
+</div>
+<!-- Forms -->
+<div class="form-card" id="quote">
+<div class="form-tabs">
+<button class="form-tab active" data-tab="contact">💬 Send Message</button>
+<button class="form-tab" data-tab="quote">📋 Request a Quote</button>
+</div>
+<!-- Contact Form -->
+<div class="form-panel active" id="panel-contact">
+<h3 style="font-size:22px;margin-bottom:8px;">Send Us a Message</h3>
+<p style="font-size:14px;color:var(--gray-dark);margin-bottom:28px;">Have a question? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+<form id="contactForm">
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">First Name *</label>
+<input class="form-control" placeholder="John" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Last Name *</label>
+<input class="form-control" placeholder="Smith" required="" type="text"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Phone *</label>
+<input class="form-control" placeholder="(305) 555-0000" required="" type="tel"/>
+</div>
+<div class="form-group">
+<label class="form-label">Email *</label>
+<input class="form-control" placeholder="john@email.com" required="" type="email"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Subject</label>
+<input class="form-control" placeholder="What can we help you with?" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Message *</label>
+<textarea class="form-control" placeholder="Tell us about your project or question..." required="" rows="5"></textarea>
+</div>
+<button class="btn btn-primary" style="width:100%;justify-content:center;" type="submit">
+<i class="fas fa-paper-plane"></i> Send Message
+            </button>
+</form>
+</div>
+<!-- Quote Form -->
+<div class="form-panel" id="panel-quote">
+<h3 style="font-size:22px;margin-bottom:8px;">Request a Free Quote</h3>
+<p style="font-size:14px;color:var(--gray-dark);margin-bottom:28px;">Fill out the form below and we'll get back to you with a fair, transparent estimate within hours.</p>
+<form id="quoteForm">
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">First Name *</label>
+<input class="form-control" placeholder="John" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Last Name *</label>
+<input class="form-control" placeholder="Smith" required="" type="text"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Phone *</label>
+<input class="form-control" placeholder="(305) 555-0000" required="" type="tel"/>
+</div>
+<div class="form-group">
+<label class="form-label">Email *</label>
+<input class="form-control" placeholder="john@email.com" required="" type="email"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Service Needed *</label>
+<select class="form-control" required="">
+<option value="">Select a service...</option>
+<option>Carpentry</option>
+<option>Plumbing</option>
+<option>Electrical</option>
+<option>Painting</option>
+<option>Roof Repairs</option>
+<option>Pressure Cleaning</option>
+<option>Drywall Repairs</option>
+<option>Delivery &amp; Hauling</option>
+<option>Multiple Services</option>
+<option>Other</option>
+</select>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">City / Area *</label>
+<input class="form-control" placeholder="Miami, Hialeah, etc." required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Preferred Date</label>
+<input class="form-control" type="date"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Budget Range</label>
+<select class="form-control">
+<option value="">Select a range...</option>
+<option>Under $200</option>
+<option>$200 – $500</option>
+<option>$500 – $1,000</option>
+<option>$1,000 – $2,500</option>
+<option>$2,500 – $5,000</option>
+<option>$5,000+</option>
+<option>Not sure yet</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Project Description *</label>
+<textarea class="form-control" placeholder="Describe your project in as much detail as possible — what needs to be done, any special requirements, photos available, etc." required="" rows="5"></textarea>
+</div>
+<button class="btn btn-primary" style="width:100%;justify-content:center;" type="submit">
+<i class="fas fa-clipboard-list"></i> Request Free Quote
+            </button>
+<p style="font-size:12px;color:var(--gray-dark);text-align:center;margin-top:12px;">No obligation. We'll respond within hours.</p>
+</form>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Map placeholder -->
+<section style="background:var(--gray-light);padding:0;">
+<div style="background:var(--navy);height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(201,168,76,0.08) 0%,transparent 70%);"></div>
+<div style="text-align:center;position:relative;z-index:1;">
+<div style="font-size:40px;margin-bottom:12px;">📍</div>
+<div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:18px;color:var(--white);">Serving All of South Florida</div>
+<div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:6px;">Miami-Dade County · Broward County · Palm Beach County</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="/" style="margin-bottom:16px;display:inline-flex;">
+<div class="nav-logo-icon">JJG</div>
+<div class="nav-logo-text">
+<span class="nav-logo-name">JJG Carpentry LLC</span>
+<span class="nav-logo-tagline">South Florida's Handyman</span>
+</div>
+</a>
+<p>Skilled, reliable, and friendly handyman services built around your to-do list. Serving Miami-Dade and Broward County since 2014.</p>
+<div class="footer-social">
+<a class="social-btn" href="#"><i class="fab fa-facebook-f"></i></a>
+<a class="social-btn" href="#"><i class="fab fa-instagram"></i></a>
+<a class="social-btn" href="#"><i class="fab fa-google"></i></a>
+<a class="social-btn" href="#"><i class="fab fa-yelp"></i></a>
+</div>
+</div>
+<div class="footer-col">
+<h4>Services</h4>
+<ul>
+<li><a href="/services">Carpentry</a></li>
+<li><a href="/services">Plumbing</a></li>
+<li><a href="/services">Electrical</a></li>
+<li><a href="/services">Painting</a></li>
+<li><a href="/services">Roof Repairs</a></li>
+<li><a href="/services">Pressure Cleaning</a></li>
+<li><a href="/services">Drywall</a></li>
+<li><a href="/services">Delivery</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/about">About Us</a></li>
+<li><a href="/gallery">Gallery</a></li>
+<li><a href="/contact">Contact</a></li>
+<li><a href="/contact#quote">Free Quote</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<div class="footer-contact-item"><span>📞</span><span><a href="tel:+13055550100" style="color:rgba(255,255,255,0.55);">(305) 555-0100</a></span></div>
+<div class="footer-contact-item"><span>✉️</span><span><a href="mailto:info@jjgcarpentry.com" style="color:rgba(255,255,255,0.55);">info@jjgcarpentry.com</a></span></div>
+<div class="footer-contact-item"><span>📍</span><span>Miami-Dade &amp; Broward County, FL</span></div>
+<div class="footer-contact-item"><span>🕐</span><span>Mon–Sat: 7am – 7pm</span></div>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2024 JJG Carpentry LLC. All rights reserved.</span>
+<span>Licensed &amp; Insured · South Florida</span>
+</div>
+</div>
+</footer>
+<script src="/js/main.js"></script>
+<script>
+  // Tab switching
+  document.querySelectorAll('.form-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Auto-switch to quote tab if #quote in URL
+  if (window.location.hash === '#quote') {
+    document.querySelector('[data-tab="quote"]').click();
+    setTimeout(() => document.getElementById('quote').scrollIntoView({ behavior: 'smooth' }), 300);
+  }
+</script>
+</body>
+</html>

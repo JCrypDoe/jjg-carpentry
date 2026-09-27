@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Lightning bolt -->
+  <polygon points="38,6 22,34 32,34 26,58 46,28 34,28" fill="#c9a84c"/>
+  <!-- Glow ring -->
+  <circle cx="32" cy="32" r="26" stroke="#c9a84c" stroke-width="2" stroke-dasharray="4 4" opacity="0.3"/>
+  <!-- Small sparks -->
+  <line x1="8" y1="12" x2="12" y2="8" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="52" y1="52" x2="56" y2="48" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="54" y1="14" x2="58" y2="10" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+</svg>

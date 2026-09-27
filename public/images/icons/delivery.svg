@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Truck body -->
+  <rect x="4" y="22" width="36" height="24" rx="3" fill="#0a1628"/>
+  <!-- Truck cab -->
+  <path d="M40 30 L40 46 L58 46 L58 36 L52 30 Z" fill="#0a1628"/>
+  <!-- Cab window -->
+  <path d="M42 32 L42 38 L54 38 L54 36 L50 32 Z" fill="#c9a84c" opacity="0.6"/>
+  <!-- Cargo box detail -->
+  <line x1="4" y1="34" x2="40" y2="34" stroke="#c9a84c" stroke-width="1" opacity="0.3"/>
+  <line x1="22" y1="22" x2="22" y2="46" stroke="#c9a84c" stroke-width="1" opacity="0.3"/>
+  <!-- Wheels -->
+  <circle cx="16" cy="48" r="6" fill="#c9a84c"/>
+  <circle cx="16" cy="48" r="3" fill="#0a1628"/>
+  <circle cx="48" cy="48" r="6" fill="#c9a84c"/>
+  <circle cx="48" cy="48" r="3" fill="#0a1628"/>
+  <!-- Ground line -->
+  <line x1="2" y1="54" x2="62" y2="54" stroke="#c9a84c" stroke-width="1.5" opacity="0.3"/>
+  <!-- Speed lines -->
+  <line x1="2" y1="28" x2="10" y2="28" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="2" y1="34" x2="8" y2="34" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+</svg>

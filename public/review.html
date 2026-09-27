@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Leave a Review — JJG Carpentry LLC</title>
+<meta content="Share your experience with JJG Carpentry LLC. Your feedback helps us improve and helps other South Florida homeowners." name="description"/>
+<link href="/css/style.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    body {
+      background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 60%, #0a1628 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .review-card {
+      background: var(--white);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 560px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .review-header {
+      background: linear-gradient(135deg, #0a1628, #1e3a5f);
+      padding: 36px 32px;
+      text-align: center;
+    }
+
+    .review-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .review-logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #c9a84c, #e0c06a);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900; font-size: 18px; color: #0a1628;
+    }
+
+    .review-logo-text {
+      text-align: left;
+    }
+
+    .review-logo-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 15px; color: #fff;
+      display: block; line-height: 1;
+    }
+
+    .review-logo-sub {
+      font-size: 11px; color: rgba(255,255,255,0.5);
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    .review-header h2 {
+      color: #fff; font-size: 26px; margin-bottom: 8px;
+    }
+
+    .review-header p {
+      color: rgba(255,255,255,0.65); font-size: 14px;
+    }
+
+    .review-body { padding: 36px 32px; }
+
+    /* Job info card */
+    .job-info-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.04));
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .job-info-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #c9a84c, #e0c06a);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+
+    .job-info-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #c9a84c; margin-bottom: 3px;
+    }
+
+    .job-info-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700; font-size: 15px; color: #0a1628;
+    }
+
+    .job-info-cat {
+      font-size: 12px; color: #888; margin-top: 2px;
+    }
+
+    /* Star rating */
+    .star-section { text-align: center; margin-bottom: 28px; }
+
+    .star-section h3 {
+      font-size: 17px; color: #0a1628; margin-bottom: 6px;
+    }
+
+    .star-section p {
+      font-size: 13px; color: #888; margin-bottom: 20px;
+    }
+
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .star-btn {
+      width: 56px; height: 56px;
+      background: #f4f4f4;
+      border: 2px solid #e0e0e0;
+      border-radius: 50%;
+      font-size: 28px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+
+    .star-btn:hover,
+    .star-btn.hovered,
+    .star-btn.selected {
+      transform: scale(1.15);
+      border-color: #c9a84c;
+      background: rgba(201,168,76,0.1);
+    }
+
+    .star-btn.selected {
+      background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.1));
+      box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+    }
+
+    .star-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: #c9a84c; min-height: 20px;
+      transition: all 0.2s;
+    }
+
+    /* Rating descriptions */
+    .rating-desc {
+      display: none;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    .rating-desc.show { display: block; }
+    .rating-desc.r1 { background: #fff3cd; color: #856404; }
+    .rating-desc.r2 { background: #ffeaa7; color: #6c5a00; }
+    .rating-desc.r3 { background: #ffd9a0; color: #7a4f00; }
+    .rating-desc.r4 { background: #d4edda; color: #155724; }
+    .rating-desc.r5 { background: #c3e6cb; color: #0a4a1a; }
+
+    /* Form */
+    .review-form { display: none; }
+    .review-form.show { display: block; }
+
+    /* Success state */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .success-state.show { display: block; }
+
+    .success-icon {
+      font-size: 72px;
+      margin-bottom: 16px;
+      animation: bounceIn 0.6s ease;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .success-state h3 {
+      font-size: 24px; color: #0a1628; margin-bottom: 8px;
+    }
+
+    .success-state p {
+      font-size: 15px; color: #666; line-height: 1.7;
+    }
+
+    /* Already submitted */
+    .already-state {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .already-state.show { display: block; }
+
+    /* Error state */
+    .error-state {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .error-state.show { display: block; }
+
+    /* Loading */
+    .loading-state {
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .loading-state .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid #e0e0e0;
+      border-top-color: #c9a84c;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .review-footer {
+      background: #f8f8f8;
+      border-top: 1px solid #e0e0e0;
+      padding: 16px 32px;
+      text-align: center;
+    }
+
+    .review-footer p {
+      font-size: 12px; color: #aaa;
+    }
+
+    .review-footer a { color: #c9a84c; }
+
+    @media (max-width: 480px) {
+      .review-body { padding: 24px 20px; }
+      .review-header { padding: 28px 20px; }
+      .star-btn { width: 48px; height: 48px; font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+<div class="review-card">
+<div class="review-header">
+<div class="review-logo">
+<div class="review-logo-icon">JJG</div>
+<div class="review-logo-text">
+<span class="review-logo-name">JJG Carpentry LLC</span>
+<span class="review-logo-sub">South Florida's Handyman</span>
+</div>
+</div>
+<h2>How did we do? ⭐</h2>
+<p>Your honest feedback helps us grow and serve South Florida better</p>
+</div>
+<div class="review-body">
+<!-- Loading -->
+<div class="loading-state" id="loadingState">
+<div class="spinner"></div>
+<p style="color:#888;font-size:14px;">Loading your review...</p>
+</div>
+<!-- Error -->
+<div class="error-state" id="errorState">
+<div style="font-size:56px;margin-bottom:16px;">😕</div>
+<h3 style="font-size:20px;color:#0a1628;margin-bottom:8px;">Link Not Found</h3>
+<p style="font-size:14px;color:#666;">This review link is invalid or has expired. Please contact us directly.</p>
+<a class="btn btn-primary" href="/" style="margin-top:20px;display:inline-flex;">
+<i class="fas fa-home"></i> Go to Website
+      </a>
+</div>
+<!-- Already submitted -->
+<div class="already-state" id="alreadyState">
+<div style="font-size:56px;margin-bottom:16px;">✅</div>
+<h3 style="font-size:20px;color:#0a1628;margin-bottom:8px;">Already Submitted!</h3>
+<p style="font-size:14px;color:#666;line-height:1.7;">You've already left a review for this job. Thank you so much for your feedback — it means a lot to our team!</p>
+<div id="alreadyRating" style="font-size:28px;margin:16px 0;"></div>
+<a class="btn btn-primary" href="/" style="margin-top:8px;display:inline-flex;">
+<i class="fas fa-home"></i> Visit Our Website
+      </a>
+</div>
+<!-- Main review form -->
+<div id="mainContent" style="display:none;">
+<!-- Job info -->
+<div class="job-info-card" id="jobInfoCard">
+<div class="job-info-icon" id="jobIcon">🔨</div>
+<div>
+<div class="job-info-label">Your Completed Job</div>
+<div class="job-info-title" id="jobTitle">Loading...</div>
+<div class="job-info-cat" id="jobCat"></div>
+</div>
+</div>
+<!-- Star rating -->
+<div class="star-section">
+<h3>Rate your experience</h3>
+<p>Tap a star to select your rating</p>
+<div class="star-rating" id="starRating">
+<button class="star-btn" data-rating="1" title="Poor">⭐</button>
+<button class="star-btn" data-rating="2" title="Fair">⭐</button>
+<button class="star-btn" data-rating="3" title="Good">⭐</button>
+<button class="star-btn" data-rating="4" title="Great">⭐</button>
+<button class="star-btn" data-rating="5" title="Excellent">⭐</button>
+</div>
+<div class="star-label" id="starLabel">Select a rating</div>
+<div class="rating-desc r1" id="desc1">😞 We're sorry to hear that. We'll do better.</div>
+<div class="rating-desc r2" id="desc2">😐 Thanks for the feedback. We'll improve.</div>
+<div class="rating-desc r3" id="desc3">🙂 Good to know! We're always improving.</div>
+<div class="rating-desc r4" id="desc4">😊 Great! We're glad you're happy with the work.</div>
+<div class="rating-desc r5" id="desc5">🤩 Amazing! You made our day — thank you!</div>
+</div>
+<!-- Review form (shown after rating selected) -->
+<div class="review-form" id="reviewForm">
+<div class="form-group">
+<label class="form-label">Your Name</label>
+<input class="form-control" id="reviewerName" placeholder="John Smith" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Your Review <span style="color:#aaa;font-weight:400;">(optional but appreciated)</span></label>
+<textarea class="form-control" id="reviewText" maxlength="1000" placeholder="Tell us about your experience — what did we do well? What could we improve?..." rows="4"></textarea>
+<div style="text-align:right;font-size:11px;color:#aaa;margin-top:4px;">
+<span id="reviewCharCount">0</span>/1000
+          </div>
+</div>
+<button class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;font-size:16px;padding:16px;">
+<i class="fas fa-paper-plane"></i> Submit My Review
+        </button>
+<p style="text-align:center;font-size:12px;color:#aaa;margin-top:12px;">
+          Your review may be displayed publicly on our website.
+        </p>
+</div>
+<!-- Success -->
+<div class="success-state" id="successState">
+<div class="success-icon">🎉</div>
+<h3>Thank You!</h3>
+<p>Your review has been submitted successfully. We truly appreciate you taking the time to share your experience with JJG Carpentry LLC.</p>
+<div id="submittedStars" style="font-size:32px;margin:16px 0;"></div>
+<a class="btn btn-primary" href="/" style="margin-top:8px;display:inline-flex;">
+<i class="fas fa-home"></i> Visit Our Website
+        </a>
+<div style="margin-top:16px;">
+<p style="font-size:13px;color:#888;">Share us with your neighbors!</p>
+<div style="display:flex;gap:10px;justify-content:center;margin-top:8px;">
+<a href="https://www.facebook.com/sharer/sharer.php?u=https://jjgcarpentry.com" style="width:40px;height:40px;background:#1877f2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;text-decoration:none;" target="_blank">
+<i class="fab fa-facebook-f"></i>
+</a>
+<a href="https://www.google.com/maps/search/JJG+Carpentry+LLC" style="width:40px;height:40px;background:#ea4335;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;text-decoration:none;" target="_blank">
+<i class="fab fa-google"></i>
+</a>
+<a href="https://www.yelp.com/search?find_desc=JJG+Carpentry+LLC" style="width:40px;height:40px;background:#d32323;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;text-decoration:none;" target="_blank">
+<i class="fab fa-yelp"></i>
+</a>
+</div>
+</div>
+</div>
+</div><!-- /mainContent -->
+</div><!-- /review-body -->
+<div class="review-footer">
+<p>
+<a href="/">JJG Carpentry LLC</a> · 
+      <a href="tel:+13055550100">(305) 555-0100</a> · 
+      South Florida
+    </p>
+</div>
+</div>
+<script>
+  const token = window.location.pathname.split('/review/')[1];
+  const urlParams = new URLSearchParams(window.location.search);
+  const preRating = parseInt(urlParams.get('rating'));
+
+  let selectedRating = 0;
+
+  const starLabels = ['', 'Poor', 'Fair', 'Good', 'Great', 'Excellent! 🌟'];
+  const catIcons = {
+    'Carpentry': '🪚', 'Plumbing': '🔧', 'Electrical': '⚡',
+    'Painting': '🎨', 'Roofing': '🏠', 'Pressure Cleaning': '💧',
+    'Drywall': '🧱', 'Delivery': '🚚'
+  };
+
+  // Load review data
+  async function loadReview() {
+    try {
+      const res = await fetch(`/api/reviews/token/${token}`);
+      const data = await res.json();
+
+      document.getElementById('loadingState').style.display = 'none';
+
+      if (!data.success) {
+        document.getElementById('errorState').classList.add('show');
+        return;
+      }
+
+      if (data.alreadySubmitted) {
+        const stars = '⭐'.repeat(data.rating || 0);
+        document.getElementById('alreadyRating').textContent = stars;
+        document.getElementById('alreadyState').classList.add('show');
+        return;
+      }
+
+      // Show main content
+      document.getElementById('mainContent').style.display = 'block';
+      document.getElementById('jobTitle').textContent = data.jobTitle || 'Your Job';
+      document.getElementById('jobCat').textContent = data.jobCategory + (data.jobDate ? ' · ' + new Date(data.jobDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : '');
+      document.getElementById('jobIcon').textContent = catIcons[data.jobCategory] || '🔨';
+
+      if (data.customerName) {
+        document.getElementById('reviewerName').value = data.customerName;
+      }
+
+      // Pre-select rating from URL param
+      if (preRating >= 1 && preRating <= 5) {
+        selectRating(preRating);
+      }
+
+    } catch (e) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').classList.add('show');
+    }
+  }
+
+  // Star rating interaction
+  const starBtns = document.querySelectorAll('.star-btn');
+
+  starBtns.forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      const r = parseInt(btn.dataset.rating);
+      highlightStars(r);
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      highlightStars(selectedRating);
+    });
+
+    btn.addEventListener('click', () => {
+      selectRating(parseInt(btn.dataset.rating));
+    });
+  });
+
+  function highlightStars(count) {
+    starBtns.forEach((b, i) => {
+      b.classList.toggle('hovered', i < count);
+    });
+    if (count > 0) {
+      document.getElementById('starLabel').textContent = starLabels[count];
+    } else {
+      document.getElementById('starLabel').textContent = selectedRating > 0 ? starLabels[selectedRating] : 'Select a rating';
+    }
+  }
+
+  function selectRating(rating) {
+    selectedRating = rating;
+    starBtns.forEach((b, i) => {
+      b.classList.toggle('selected', i < rating);
+      b.classList.remove('hovered');
+    });
+    document.getElementById('starLabel').textContent = starLabels[rating];
+
+    // Show/hide rating descriptions
+    for (let i = 1; i <= 5; i++) {
+      const el = document.getElementById('desc' + i);
+      el.classList.toggle('show', i === rating);
+    }
+
+    // Show review form
+    document.getElementById('reviewForm').classList.add('show');
+
+    // Smooth scroll to form
+    setTimeout(() => {
+      document.getElementById('reviewForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  }
+
+  // Char counter
+  document.getElementById('reviewText').addEventListener('input', function() {
+    document.getElementById('reviewCharCount').textContent = this.value.length;
+  });
+
+  // Submit review
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    if (!selectedRating) {
+      document.getElementById('starLabel').textContent = '⚠️ Please select a rating first';
+      document.getElementById('starLabel').style.color = '#dc3545';
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Submitting...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`/api/reviews/submit/${token}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rating: selectedRating,
+          reviewText: document.getElementById('reviewText').value,
+          customerName: document.getElementById('reviewerName').value
+        })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        document.getElementById('reviewForm').classList.remove('show');
+        document.querySelector('.star-section').style.display = 'none';
+        document.getElementById('jobInfoCard').style.display = 'none';
+        document.getElementById('submittedStars').textContent = '⭐'.repeat(selectedRating);
+        document.getElementById('successState').classList.add('show');
+      } else {
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit My Review';
+        btn.disabled = false;
+        alert(data.message || 'Submission failed. Please try again.');
+      }
+    } catch (e) {
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit My Review';
+      btn.disabled = false;
+      alert('Network error. Please try again.');
+    }
+  });
+
+  // Init
+  loadReview();
+</script>
+</body>
+</html>

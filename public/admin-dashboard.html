@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard — JJG Carpentry LLC</title>
+<link href="/css/style.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    body { background: var(--gray-light); }
+
+    /* ── Sidebar ── */
+    .admin-sidebar { background: var(--navy); position:fixed; top:0; left:0; bottom:0; width:260px; overflow-y:auto; z-index:100; }
+    .admin-sidebar-header { padding:24px 20px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .sidebar-section-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.3); padding:16px 16px 8px; }
+    .admin-nav { padding:8px 12px; }
+    .admin-nav-item { display:flex; align-items:center; gap:12px; padding:11px 16px; border-radius:var(--radius-sm); color:rgba(255,255,255,0.65); font-family:'Montserrat',sans-serif; font-weight:600; font-size:13px; cursor:pointer; transition:all var(--transition); margin-bottom:3px; border:none; background:none; width:100%; text-align:left; text-decoration:none; }
+    .admin-nav-item:hover, .admin-nav-item.active { background:rgba(201,168,76,0.12); color:var(--gold); }
+    .admin-nav-item span:first-child { font-size:17px; }
+    .nav-badge { margin-left:auto; background:var(--gold); color:var(--navy); font-size:10px; font-weight:800; padding:2px 7px; border-radius:50px; }
+
+    /* ── Main ── */
+    .admin-main { margin-left:260px; background:var(--gray-light); min-height:100vh; }
+    .admin-topbar { background:var(--white); padding:16px 32px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--gray-mid); position:sticky; top:0; z-index:50; }
+    .admin-content { padding:28px 32px; }
+    .admin-panel { display:none; }
+    .admin-panel.active { display:block; }
+    .admin-card { background:var(--white); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow); margin-bottom:24px; }
+    .admin-card h3 { font-size:17px; margin-bottom:20px; padding-bottom:14px; border-bottom:2px solid var(--gray-light); }
+
+    /* ── Stats ── */
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:24px; }
+    .stat-card { background:var(--white); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); display:flex; align-items:center; gap:14px; }
+    .stat-icon { width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .stat-icon.gold { background:rgba(201,168,76,0.15); }
+    .stat-icon.navy { background:rgba(10,22,40,0.08); }
+    .stat-icon.green { background:rgba(40,167,69,0.1); }
+    .stat-icon.blue { background:rgba(0,123,255,0.1); }
+    .stat-num { font-family:'Montserrat',sans-serif; font-size:26px; font-weight:900; color:var(--navy); line-height:1; }
+    .stat-label { font-size:12px; color:var(--gray-dark); margin-top:3px; }
+
+    /* ── Upload ── */
+    .upload-zone { border:2px dashed var(--gray-mid); border-radius:var(--radius); padding:40px 24px; text-align:center; cursor:pointer; transition:all var(--transition); background:var(--gray-light); position:relative; }
+    .upload-zone:hover, .upload-zone.drag-over { border-color:var(--gold); background:rgba(201,168,76,0.05); }
+    .upload-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .upload-icon { font-size:44px; margin-bottom:14px; }
+    .upload-preview { display:none; margin-top:14px; }
+    .upload-preview img { max-height:180px; border-radius:var(--radius-sm); margin:0 auto; }
+    .upload-progress { display:none; margin-top:14px; }
+    .char-count { font-size:11px; color:var(--gray-dark); text-align:right; margin-top:3px; }
+
+    /* ── Category grid ── */
+    .cat-select-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; margin-bottom:6px; }
+    .cat-option { border:2px solid var(--gray-mid); border-radius:var(--radius-sm); padding:10px 6px; text-align:center; cursor:pointer; font-family:'Montserrat',sans-serif; font-weight:600; font-size:12px; transition:all var(--transition); background:var(--white); }
+    .cat-option:hover, .cat-option.selected { border-color:var(--gold); background:rgba(201,168,76,0.08); color:var(--navy); }
+    .cat-option .cat-emoji { font-size:20px; display:block; margin-bottom:3px; }
+
+    /* ── Customer info section ── */
+    .customer-section { background:linear-gradient(135deg,rgba(10,22,40,0.04),rgba(10,22,40,0.02)); border:1px solid rgba(10,22,40,0.1); border-radius:var(--radius); padding:20px; margin-top:8px; }
+    .customer-section-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+    .customer-section-header h4 { font-size:15px; color:var(--navy); margin:0; }
+    .customer-section-header span { font-size:20px; }
+    .send-via-group { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+    .send-via-btn { display:flex; align-items:center; gap:8px; padding:10px 18px; border:2px solid var(--gray-mid); border-radius:50px; cursor:pointer; font-family:'Montserrat',sans-serif; font-weight:600; font-size:13px; background:var(--white); transition:all var(--transition); }
+    .send-via-btn input[type="checkbox"] { accent-color:var(--gold); width:16px; height:16px; }
+    .send-via-btn:has(input:checked) { border-color:var(--gold); background:rgba(201,168,76,0.08); color:var(--navy); }
+    .review-link-preview { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius-sm); padding:12px 16px; font-size:12px; color:var(--gray-dark); margin-top:12px; display:none; }
+    .review-link-preview a { color:var(--gold); word-break:break-all; }
+
+    /* ── Jobs table ── */
+    .search-bar { display:flex; align-items:center; gap:12px; background:var(--white); border:2px solid var(--gray-mid); border-radius:var(--radius-sm); padding:10px 16px; margin-bottom:18px; }
+    .search-bar input { border:none; outline:none; flex:1; font-family:'Open Sans',sans-serif; font-size:14px; }
+    .search-bar i { color:var(--gray-dark); }
+    .table-wrap { overflow-x:auto; }
+    .jobs-table { width:100%; border-collapse:collapse; }
+    .jobs-table th { background:var(--gray-light); padding:11px 14px; text-align:left; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; color:var(--navy); letter-spacing:0.5px; text-transform:uppercase; }
+    .jobs-table td { padding:13px 14px; border-bottom:1px solid var(--gray-light); font-size:13px; vertical-align:middle; }
+    .jobs-table tr:hover td { background:rgba(201,168,76,0.03); }
+    .jobs-table img { width:56px; height:42px; object-fit:cover; border-radius:6px; }
+    .cat-badge { display:inline-block; padding:3px 10px; border-radius:50px; font-size:11px; font-weight:700; font-family:'Montserrat',sans-serif; background:rgba(10,22,40,0.08); color:var(--navy); }
+    .action-btns { display:flex; gap:6px; flex-wrap:wrap; }
+    .btn-edit, .btn-delete, .btn-review { padding:5px 12px; border-radius:var(--radius-sm); font-size:11px; font-weight:600; cursor:pointer; border:none; font-family:'Montserrat',sans-serif; transition:all var(--transition); white-space:nowrap; }
+    .btn-edit { background:rgba(10,22,40,0.08); color:var(--navy); }
+    .btn-edit:hover { background:var(--navy); color:var(--white); }
+    .btn-delete { background:rgba(220,53,69,0.1); color:#dc3545; }
+    .btn-delete:hover { background:#dc3545; color:var(--white); }
+    .btn-review { background:rgba(201,168,76,0.15); color:#8B6914; }
+    .btn-review:hover { background:var(--gold); color:var(--navy); }
+    .btn-review.sent { background:rgba(40,167,69,0.1); color:#28a745; }
+    .btn-review.sent:hover { background:#28a745; color:var(--white); }
+    .no-jobs { text-align:center; padding:40px; color:var(--gray-dark); }
+
+    /* ── Reviews panel ── */
+    .review-row { background:var(--white); border-radius:var(--radius); padding:20px; margin-bottom:16px; box-shadow:var(--shadow); border-left:4px solid var(--gray-mid); transition:all var(--transition); }
+    .review-row.submitted { border-left-color:var(--gold); }
+    .review-row.pending { border-left-color:#6c757d; }
+    .review-row-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:12px; }
+    .review-stars { font-size:20px; letter-spacing:2px; }
+    .review-meta { font-size:12px; color:var(--gray-dark); margin-top:4px; }
+    .review-text { font-size:14px; color:var(--text); line-height:1.7; font-style:italic; margin:12px 0; padding:12px 16px; background:var(--gray-light); border-radius:var(--radius-sm); }
+    .review-status-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:50px; font-size:11px; font-weight:700; font-family:'Montserrat',sans-serif; }
+    .status-pending { background:rgba(108,117,125,0.1); color:#6c757d; }
+    .status-submitted { background:rgba(40,167,69,0.1); color:#28a745; }
+    .review-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .review-filter-tabs { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+    .review-filter-tab { padding:8px 18px; border-radius:50px; border:2px solid var(--gray-mid); background:var(--white); font-family:'Montserrat',sans-serif; font-weight:600; font-size:12px; color:var(--gray-dark); cursor:pointer; transition:all var(--transition); }
+    .review-filter-tab.active { background:var(--navy); border-color:var(--navy); color:var(--white); }
+    .avg-rating-display { display:flex; align-items:center; gap:16px; padding:20px; background:linear-gradient(135deg,var(--navy),var(--navy-light)); border-radius:var(--radius); margin-bottom:20px; }
+    .avg-rating-num { font-family:'Montserrat',sans-serif; font-size:48px; font-weight:900; color:var(--gold); line-height:1; }
+    .avg-rating-stars { font-size:22px; }
+    .avg-rating-label { font-size:13px; color:rgba(255,255,255,0.6); margin-top:4px; }
+
+    /* ── Send review modal ── */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity var(--transition); }
+    .modal-overlay.active { opacity:1; pointer-events:all; }
+    .modal { background:var(--white); border-radius:16px; padding:32px; width:90%; max-width:520px; transform:scale(0.9); transition:transform var(--transition); max-height:90vh; overflow-y:auto; }
+    .modal-overlay.active .modal { transform:scale(1); }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--gray-dark); padding:4px; }
+
+    /* ── Admin badge ── */
+    .admin-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); border-radius:50px; padding:4px 12px; font-size:12px; font-weight:600; color:var(--gold); }
+
+    @media (max-width:768px) {
+      .admin-sidebar { display:none; }
+      .admin-main { margin-left:0; }
+      .stats-grid { grid-template-columns:repeat(2,1fr); }
+      .admin-content { padding:16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+<!-- ── Sidebar ── -->
+<aside class="admin-sidebar">
+<div class="admin-sidebar-header">
+<div class="nav-logo">
+<div class="nav-logo-icon" style="width:36px;height:36px;font-size:14px;">JJG</div>
+<div class="nav-logo-text">
+<span class="nav-logo-name" style="font-size:13px;">JJG Carpentry</span>
+<span class="nav-logo-tagline" style="font-size:9px;">Admin Portal</span>
+</div>
+</div>
+</div>
+<div class="sidebar-section-label">Main</div>
+<nav class="admin-nav">
+<button class="admin-nav-item active" data-panel="overview"><span>📊</span> Overview</button>
+<button class="admin-nav-item" data-panel="upload"><span>📤</span> Upload Job</button>
+<button class="admin-nav-item" data-panel="jobs"><span>🗂️</span> Manage Jobs</button>
+<button class="admin-nav-item" data-panel="customers"><span>👥</span> Customers</button>
+<button class="admin-nav-item" data-panel="reviews"><span>⭐</span> Reviews <span class="nav-badge" id="pendingBadge" style="display:none;">0</span></button>
+</nav>
+<div class="sidebar-section-label">Site</div>
+<nav class="admin-nav">
+<a class="admin-nav-item" href="/" target="_blank"><span>🏠</span> View Website</a>
+<a class="admin-nav-item" href="/gallery" target="_blank"><span>🖼️</span> View Gallery</a>
+</nav>
+<div class="sidebar-section-label">Account</div>
+<nav class="admin-nav">
+<button class="admin-nav-item" id="logoutBtn"><span>🚪</span> Logout</button>
+</nav>
+</aside>
+<!-- ── Main ── -->
+<main class="admin-main">
+<div class="admin-topbar">
+<div>
+<h2 id="panelTitle" style="font-size:19px;">Overview</h2>
+<div id="panelSub" style="font-size:12px;color:var(--gray-dark);margin-top:2px;">Welcome back</div>
+</div>
+<div style="display:flex;align-items:center;gap:14px;">
+<div class="admin-badge"><i class="fas fa-circle" style="font-size:8px;color:#28a745;"></i><span id="adminUsername">admin</span></div>
+<a class="btn btn-primary btn-sm" href="/" target="_blank"><i class="fas fa-external-link-alt"></i> Live Site</a>
+</div>
+</div>
+<div class="admin-content">
+<!-- ══════════════════════════════════════
+           OVERVIEW PANEL
+      ══════════════════════════════════════ -->
+<div class="admin-panel active" id="panel-overview">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-icon gold">📸</div><div><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total Jobs</div></div></div>
+<div class="stat-card"><div class="stat-icon green">⭐</div><div><div class="stat-num" id="statReviews">—</div><div class="stat-label">Reviews Received</div></div></div>
+<div class="stat-card"><div class="stat-icon gold">📊</div><div><div class="stat-num" id="statAvgRating">—</div><div class="stat-label">Avg Rating</div></div></div>
+<div class="stat-card"><div class="stat-icon blue">📨</div><div><div class="stat-num" id="statPending">—</div><div class="stat-label">Pending Reviews</div></div></div>
+</div>
+<div class="admin-card">
+<h3>📋 Recent Jobs</h3>
+<div id="recentJobsList"><div class="no-jobs">Loading...</div></div>
+</div>
+<div class="admin-card" style="background:linear-gradient(135deg,var(--navy),var(--navy-light));color:var(--white);">
+<h3 style="color:var(--gold);border-color:rgba(255,255,255,0.1);">⚡ Quick Actions</h3>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+<button class="btn btn-primary" data-action="panel-upload"><i class="fas fa-upload"></i> Upload New Job</button>
+<button class="btn btn-outline" data-action="panel-jobs"><i class="fas fa-list"></i> Manage Jobs</button>
+<button class="btn btn-outline" data-action="panel-reviews"><i class="fas fa-star"></i> View Reviews</button>
+</div>
+</div>
+</div>
+<!-- ══════════════════════════════════════
+           UPLOAD PANEL
+      ══════════════════════════════════════ -->
+<div class="admin-panel" id="panel-upload">
+<div class="admin-card">
+<h3>📤 Upload New Job Photo</h3>
+<form enctype="multipart/form-data" id="uploadForm">
+<!-- Image -->
+<div class="form-group">
+<label class="form-label">Job Photo *</label>
+<div class="upload-zone" id="uploadZone">
+<input accept="image/*" id="imageInput" name="image" required="" type="file"/>
+<div class="upload-icon">📷</div>
+<h4>Drag &amp; Drop or Click to Upload</h4>
+<p>JPG, PNG, WebP · Max 10MB</p>
+</div>
+<div class="upload-preview" id="uploadPreview">
+<img alt="Preview" id="previewImg" src=""/>
+<div id="previewInfo" style="margin-top:6px;font-size:12px;color:var(--gray-dark);"></div>
+</div>
+<div class="upload-progress" id="uploadProgress">
+<div style="font-size:13px;color:var(--gray-dark);margin-bottom:6px;">Uploading...</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+</div>
+<!-- Title -->
+<div class="form-group">
+<label class="form-label">Job Title *</label>
+<input class="form-control" id="jobTitle" maxlength="80" name="title" placeholder="e.g. Kitchen Cabinet Installation" required="" type="text"/>
+<div class="char-count"><span id="titleCount">0</span>/80</div>
+</div>
+<!-- Category -->
+<div class="form-group">
+<label class="form-label">Category *</label>
+<input id="categoryInput" name="category" required="" type="hidden"/>
+<div class="cat-select-grid">
+<div class="cat-option" data-cat="Carpentry"><span class="cat-emoji">🪚</span>Carpentry</div>
+<div class="cat-option" data-cat="Plumbing"><span class="cat-emoji">🔧</span>Plumbing</div>
+<div class="cat-option" data-cat="Electrical"><span class="cat-emoji">⚡</span>Electrical</div>
+<div class="cat-option" data-cat="Painting"><span class="cat-emoji">🎨</span>Painting</div>
+<div class="cat-option" data-cat="Roofing"><span class="cat-emoji">🏠</span>Roofing</div>
+<div class="cat-option" data-cat="Pressure Cleaning"><span class="cat-emoji">💧</span>Pressure Cleaning</div>
+<div class="cat-option" data-cat="Drywall"><span class="cat-emoji">🧱</span>Drywall</div>
+<div class="cat-option" data-cat="Delivery"><span class="cat-emoji">🚚</span>Delivery</div>
+</div>
+</div>
+<!-- Date & Location -->
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Job Date</label>
+<input class="form-control" id="jobDate" name="date" type="date"/>
+</div>
+<div class="form-group">
+<label class="form-label">Location (optional)</label>
+<input class="form-control" name="location" placeholder="e.g. Miami, FL" type="text"/>
+</div>
+</div>
+<!-- Description -->
+<div class="form-group">
+<label class="form-label">Description</label>
+<textarea class="form-control" id="jobDesc" maxlength="500" name="description" placeholder="Describe the job..." rows="3"></textarea>
+<div class="char-count"><span id="descCount">0</span>/500</div>
+</div>
+<!-- ── Customer Info & Review Request ── -->
+<div class="customer-section">
+<div class="customer-section-header">
+<span>👤</span>
+<h4>Customer Info &amp; Review Request</h4>
+</div>
+<p style="font-size:13px;color:var(--gray-dark);margin-bottom:16px;">Add customer contact info to send them a review request after uploading.</p>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">First Name</label>
+<input class="form-control" id="customerFirstName" name="customerFirstName" placeholder="John" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Last Name</label>
+<input class="form-control" id="customerLastName" name="customerLastName" placeholder="Smith" type="text"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Customer Email</label>
+<input class="form-control" id="customerEmail" name="customerEmail" placeholder="john@email.com" type="email"/>
+</div>
+<div class="form-group">
+<label class="form-label">Customer Phone</label>
+<input class="form-control" id="customerPhone" name="customerPhone" placeholder="+1 (305) 555-0000" type="tel"/>
+</div>
+</div>
+<label class="form-label">Send Review Request Via</label>
+<div class="send-via-group">
+<label class="send-via-btn">
+<input id="sendEmail" type="checkbox" value="email"/> ✉️ Email
+                </label>
+<label class="send-via-btn">
+<input id="sendSMS" type="checkbox" value="sms"/> 📱 SMS / Text
+                </label>
+<label class="send-via-btn">
+<input id="sendLink" type="checkbox" value="link"/> 🔗 Copy Link Only
+                </label>
+</div>
+<div class="review-link-preview" id="reviewLinkPreview">
+<strong>📋 Review link will be generated after upload:</strong><br/>
+<span style="color:var(--gray-dark);">yoursite.com/review/<em>unique-token</em></span>
+</div>
+</div>
+<div style="display:flex;gap:12px;margin-top:20px;">
+<button class="btn btn-primary btn-lg" id="uploadBtn" type="submit">
+<i class="fas fa-upload"></i> Upload Job
+              </button>
+<button class="btn btn-navy" data-action="reset-upload" type="button">
+<i class="fas fa-redo"></i> Reset
+              </button>
+</div>
+</form>
+</div>
+</div>
+<!-- ══════════════════════════════════════
+           JOBS PANEL
+      ══════════════════════════════════════ -->
+<div class="admin-panel" id="panel-jobs">
+<div class="admin-card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--gray-light);">
+<h3 style="margin:0;border:none;padding:0;">🗂️ All Jobs</h3>
+<button class="btn btn-primary btn-sm" data-action="panel-upload"><i class="fas fa-plus"></i> Add Job</button>
+</div>
+<div class="search-bar">
+<i class="fas fa-search"></i>
+<input id="jobSearch" placeholder="Search by title, category..." type="text"/>
+<select id="catFilter" style="border:none;outline:none;font-family:'Open Sans',sans-serif;font-size:13px;color:var(--gray-dark);cursor:pointer;">
+<option value="">All Categories</option>
+<option>Carpentry</option><option>Plumbing</option><option>Electrical</option>
+<option>Painting</option><option>Roofing</option><option>Pressure Cleaning</option>
+<option>Drywall</option><option>Delivery</option>
+</select>
+</div>
+<div class="table-wrap">
+<table class="jobs-table">
+<thead>
+<tr>
+<th>Photo</th><th>Title</th><th>Category</th><th>Customer</th><th>Date</th><th>Review</th><th>Actions</th>
+</tr>
+</thead>
+<tbody id="jobsTableBody"><tr><td class="no-jobs" colspan="7">Loading...</td></tr></tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- ══════════════════════════════════════
+       CUSTOMERS PANEL
+  ══════════════════════════════════════ -->
+<div class="admin-panel" id="panel-customers">
+<div class="admin-card">
+<h3>👥 Customer Records</h3>
+<form id="customerForm">
+<div class="form-row">
+<div class="form-group"><label class="form-label" for="newCustomerFirstName">First Name *</label><input class="form-control" id="newCustomerFirstName" name="firstName" required type="text"/></div>
+<div class="form-group"><label class="form-label" for="newCustomerLastName">Last Name *</label><input class="form-control" id="newCustomerLastName" name="lastName" required type="text"/></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label" for="newCustomerEmail">Email</label><input class="form-control" id="newCustomerEmail" name="email" type="email"/></div>
+<div class="form-group"><label class="form-label" for="newCustomerPhone">Phone</label><input class="form-control" id="newCustomerPhone" name="phone" type="tel"/></div>
+</div>
+<button class="btn btn-primary" type="submit"><i class="fas fa-user-plus"></i> Add Customer</button>
+</form>
+</div>
+<div class="admin-card">
+<h3>Saved Customers</h3>
+<div class="search-bar"><i class="fas fa-search"></i><input id="customerSearch" placeholder="Search name, email, or phone..." type="search"/></div>
+<div class="table-wrap"><table class="jobs-table">
+<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Jobs</th></tr></thead>
+<tbody id="customersTableBody"><tr><td class="no-jobs" colspan="4">Loading...</td></tr></tbody>
+</table></div>
+</div>
+</div>
+<!-- ══════════════════════════════════════
+           REVIEWS PANEL
+      ══════════════════════════════════════ -->
+<div class="admin-panel" id="panel-reviews">
+<!-- Avg rating -->
+<div class="avg-rating-display" id="avgRatingDisplay" style="display:none;">
+<div>
+<div class="avg-rating-num" id="avgRatingNum">—</div>
+<div class="avg-rating-stars" id="avgRatingStars"></div>
+<div class="avg-rating-label" id="avgRatingLabel">out of 5 stars</div>
+</div>
+<div style="flex:1;padding-left:20px;border-left:1px solid rgba(255,255,255,0.1);">
+<div id="ratingBreakdown"></div>
+</div>
+</div>
+<div class="admin-card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--gray-light);">
+<h3 style="margin:0;border:none;padding:0;">⭐ Customer Reviews</h3>
+<button class="btn btn-primary btn-sm" data-action="panel-jobs"><i class="fas fa-paper-plane"></i> Send Review Request</button>
+</div>
+<div class="review-filter-tabs">
+<button class="review-filter-tab active" data-filter="all">All</button>
+<button class="review-filter-tab" data-filter="submitted">✅ Submitted</button>
+<button class="review-filter-tab" data-filter="pending">⏳ Pending</button>
+<button class="review-filter-tab" data-filter="5">⭐⭐⭐⭐⭐ 5 Stars</button>
+<button class="review-filter-tab" data-filter="4">⭐⭐⭐⭐ 4 Stars</button>
+</div>
+<div id="reviewsList"><div class="no-jobs">Loading reviews...</div></div>
+</div>
+</div>
+</div><!-- /admin-content -->
+</main>
+</div>
+<!-- ── Edit Job Modal ── -->
+<div class="modal-overlay" id="editModal">
+<div class="modal">
+<div class="modal-header">
+<h3 style="font-size:17px;">✏️ Edit Job</h3>
+<button class="modal-close" id="editModalClose">✕</button>
+</div>
+<form id="editForm">
+<input id="editJobId" type="hidden"/>
+<div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="editTitle" required="" type="text"/></div>
+<div class="form-group">
+<label class="form-label">Category *</label>
+<select class="form-control" id="editCategory" required="">
+<option>Carpentry</option><option>Plumbing</option><option>Electrical</option>
+<option>Painting</option><option>Roofing</option><option>Pressure Cleaning</option>
+<option>Drywall</option><option>Delivery</option>
+</select>
+</div>
+<div class="form-group"><label class="form-label">Date</label><input class="form-control" id="editDate" type="date"/></div>
+<div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="editDesc" rows="3"></textarea></div>
+<div style="display:flex;gap:12px;">
+<button class="btn btn-primary" style="flex:1;justify-content:center;" type="submit">Save Changes</button>
+<button class="btn btn-navy" id="editCancelBtn" type="button">Cancel</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ── Send Review Modal ── -->
+<div class="modal-overlay" id="reviewModal">
+<div class="modal">
+<div class="modal-header">
+<h3 style="font-size:17px;">⭐ Send Review Request</h3>
+<button class="modal-close" id="reviewModalClose">✕</button>
+</div>
+<div id="reviewModalJobInfo" style="background:var(--gray-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:20px;font-size:13px;"></div>
+<form id="reviewRequestForm">
+<input id="reviewJobId" type="hidden"/>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Customer Name</label><input class="form-control" id="reviewCustomerName" placeholder="John Smith" type="text"/></div>
+<div class="form-group"><label class="form-label">Customer Email</label><input class="form-control" id="reviewCustomerEmail" placeholder="john@email.com" type="email"/></div>
+</div>
+<div class="form-group"><label class="form-label">Customer Phone</label><input class="form-control" id="reviewCustomerPhone" placeholder="+1 (305) 555-0000" type="tel"/></div>
+<div class="form-group">
+<label class="form-label">Send Via *</label>
+<div class="send-via-group">
+<label class="send-via-btn"><input id="modalSendEmail" name="sendVia" type="checkbox" value="email"/> ✉️ Email</label>
+<label class="send-via-btn"><input id="modalSendSMS" name="sendVia" type="checkbox" value="sms"/> 📱 SMS</label>
+<label class="send-via-btn"><input id="modalSendLink" name="sendVia" type="checkbox" value="link"/> 🔗 Link Only</label>
+</div>
+</div>
+<div id="reviewLinkResult" style="display:none;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:13px;"></div>
+<div style="display:flex;gap:12px;">
+<button class="btn btn-primary" id="sendReviewBtn" style="flex:1;justify-content:center;" type="submit"><i class="fas fa-paper-plane"></i> Send Request</button>
+<button class="btn btn-navy" id="reviewCancelBtn" type="button">Cancel</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ── Delete Confirm Modal ── -->
+<div class="modal-overlay" id="deleteModal">
+<div class="modal" style="max-width:400px;">
+<div class="modal-header">
+<h3 style="font-size:17px;color:#dc3545;">🗑️ Delete Job</h3>
+<button class="modal-close" id="deleteModalClose">✕</button>
+</div>
+<p style="font-size:14px;color:var(--gray-dark);margin-bottom:24px;">Are you sure you want to delete "<strong id="deleteJobTitle"></strong>"? This cannot be undone.</p>
+<div style="display:flex;gap:12px;">
+<button class="btn-delete" id="confirmDeleteBtn" style="flex:1;padding:12px;border-radius:var(--radius-sm);font-size:14px;">Yes, Delete</button>
+<button class="btn btn-navy" id="deleteCancelBtn" style="flex:1;">Cancel</button>
+</div>
+</div>
+</div>
+<script>
+// ── Auth ──
+const token = localStorage.getItem('jjg_token');
+if (!token) window.location.href = '/admin/login';
+try {
+  const p = JSON.parse(atob(token.split('.')[1]));
+  document.getElementById('adminUsername').textContent = p.username || 'admin';
+} catch {}
+const authHeaders = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+// ── Panel nav ──
+const panelTitles = {
+  overview: ['Overview', 'Welcome back to your dashboard'],
+  upload:   ['Upload Job', 'Add a new project photo to the gallery'],
+  jobs:     ['Manage Jobs', 'View, edit, and delete job entries'],
+  customers: ['Customers', 'Keep customer contact details linked to their jobs'],
+  reviews:  ['Customer Reviews', 'Manage review requests and submitted ratings']
+};
+
+function switchPanel(name) {
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.admin-nav-item[data-panel]').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
+  document.getElementById('panelTitle').textContent = panelTitles[name][0];
+  document.getElementById('panelSub').textContent = panelTitles[name][1];
+  if (name === 'jobs') loadJobsTable();
+  if (name === 'customers') loadCustomers();
+  if (name === 'overview') loadOverview();
+  if (name === 'reviews') loadReviews();
+}
+
+document.querySelectorAll('[data-panel]').forEach(btn => {
+  btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
+});
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+
+  const { action, id, title, path } = button.dataset;
+  if (action.startsWith('panel-')) switchPanel(action.slice(6));
+  else if (action === 'reset-upload') resetUploadForm();
+  else if (action === 'request-review') openReviewModal(id);
+  else if (action === 'resend-review') resendReview(id);
+  else if (action === 'edit-job') openEditModal(id);
+  else if (action === 'delete-job') openDeleteModal(id, title);
+  else if (action === 'copy-link') copyLink(path);
+  else if (action === 'toggle-feature') toggleFeature(id);
+  else if (action === 'delete-review') deleteReview(id);
+});
+
+// ── Logout ──
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await fetch('/api/auth/logout', { method: 'POST' });
+  localStorage.removeItem('jjg_token');
+  window.location.href = '/admin/login';
+});
+
+// ── Helpers ──
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function starsHTML(n) {
+  if (!n) return '—';
+  return '⭐'.repeat(n) + '☆'.repeat(5 - n);
+}
+function showToast(msg, type = 'info') {
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+function escapeHTML(value) {
+  return String(value || '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+function placeholderImg() {
+  return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 45"><rect width="60" height="45" fill="#0a1628"/><text x="30" y="22" font-size="16" fill="#c9a84c" text-anchor="middle" dominant-baseline="middle">📷</text></svg>');
+}
+
+// ── Overview ──
+let allJobsCache = [];
+let allReviewsCache = [];
+
+async function loadOverview() {
+  try {
+    const [jobsRes, reviewsRes] = await Promise.all([
+      fetch('/api/admin/jobs', { headers: authHeaders }),
+      fetch('/api/reviews', { headers: authHeaders })
+    ]);
+    const jobsData = await jobsRes.json();
+    const reviewsData = await reviewsRes.json();
+    allJobsCache = jobsData.jobs || [];
+    allReviewsCache = reviewsData.reviews || [];
+
+    const submitted = allReviewsCache.filter(r => r.status === 'submitted');
+    const pending = allReviewsCache.filter(r => r.status === 'pending');
+    const avgRating = submitted.length ? (submitted.reduce((s, r) => s + r.rating, 0) / submitted.length).toFixed(1) : '—';
+
+    document.getElementById('statTotal').textContent = allJobsCache.length;
+    document.getElementById('statReviews').textContent = submitted.length;
+    document.getElementById('statAvgRating').textContent = avgRating;
+    document.getElementById('statPending').textContent = pending.length;
+
+    // Pending badge
+    const badge = document.getElementById('pendingBadge');
+    if (pending.length > 0) { badge.textContent = pending.length; badge.style.display = 'inline'; }
+    else badge.style.display = 'none';
+
+    // Recent jobs
+    const recent = allJobsCache.slice(0, 5);
+    const el = document.getElementById('recentJobsList');
+    if (recent.length === 0) {
+      el.innerHTML = '<div class="no-jobs">No jobs yet. <button class="btn btn-primary btn-sm" data-action="panel-upload">Upload your first job</button></div>';
+      return;
+    }
+    el.innerHTML = `<table class="jobs-table"><thead><tr><th>Photo</th><th>Title</th><th>Category</th><th>Customer</th><th>Date</th></tr></thead><tbody>
+      ${recent.map(j => `<tr>
+        <td><img src="${j.thumbnail_url || j.image_url}" style="width:56px;height:42px;object-fit:cover;border-radius:6px;" onerror="this.src='${placeholderImg()}'"/></td>
+        <td style="font-weight:600;">${j.title}</td>
+        <td><span class="cat-badge">${j.category}</span></td>
+        <td style="font-size:12px;color:var(--gray-dark);">${j.customerName || '—'}</td>
+        <td style="font-size:12px;color:var(--gray-dark);">${formatDate(j.date)}</td>
+      </tr>`).join('')}
+    </tbody></table>`;
+  } catch (e) {
+    document.getElementById('recentJobsList').innerHTML = '<div class="no-jobs">Failed to load.</div>';
+  }
+}
+
+// ── Upload ──
+const imageInput = document.getElementById('imageInput');
+const uploadZone = document.getElementById('uploadZone');
+
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) { imageInput.files = e.dataTransfer.files; showPreview(file); }
+});
+imageInput.addEventListener('change', () => { if (imageInput.files[0]) showPreview(imageInput.files[0]); });
+
+function showPreview(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('uploadPreview').style.display = 'block';
+    document.getElementById('previewInfo').textContent = `${file.name} · ${(file.size/1024/1024).toFixed(2)} MB`;
+    document.getElementById('jobDate').value = new Date(file.lastModified).toISOString().split('T')[0];
+  };
+  reader.readAsDataURL(file);
+}
+
+document.querySelectorAll('.cat-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.cat-option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    document.getElementById('categoryInput').value = opt.dataset.cat;
+  });
+});
+
+document.getElementById('jobTitle').addEventListener('input', function() { document.getElementById('titleCount').textContent = this.value.length; });
+document.getElementById('jobDesc').addEventListener('input', function() { document.getElementById('descCount').textContent = this.value.length; });
+
+// Show review link preview when any send-via is checked
+['sendEmail','sendSMS','sendLink'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => {
+    const anyChecked = ['sendEmail','sendSMS','sendLink'].some(i => document.getElementById(i).checked);
+    document.getElementById('reviewLinkPreview').style.display = anyChecked ? 'block' : 'none';
+  });
+});
+
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const cat = document.getElementById('categoryInput').value;
+  if (!cat) { showToast('Please select a category.', 'error'); return; }
+
+  const btn = document.getElementById('uploadBtn');
+  const progressEl = document.getElementById('uploadProgress');
+  const progressFill = document.getElementById('progressFill');
+  btn.innerHTML = '<span class="spinner"></span> Uploading...';
+  btn.disabled = true;
+  progressEl.style.display = 'block';
+
+  let prog = 0;
+  const progTimer = setInterval(() => { prog = Math.min(prog + Math.random() * 15, 85); progressFill.style.width = prog + '%'; }, 200);
+
+  try {
+    const formData = new FormData(document.getElementById('uploadForm'));
+    const res = await fetch('/api/admin/upload', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: formData
+    });
+    const data = await res.json();
+    clearInterval(progTimer);
+    progressFill.style.width = '100%';
+
+    if (data.success) {
+      const jobId = data.job.id;
+
+      // Send review request if customer info provided
+      const sendVia = [];
+      if (document.getElementById('sendEmail').checked) sendVia.push('email');
+      if (document.getElementById('sendSMS').checked) sendVia.push('sms');
+      if (document.getElementById('sendLink').checked) sendVia.push('link');
+
+      const customerEmail = document.getElementById('customerEmail').value;
+      const customerPhone = document.getElementById('customerPhone').value;
+      const customerName = `${document.getElementById('customerFirstName').value} ${document.getElementById('customerLastName').value}`.trim();
+
+      if (sendVia.length > 0 && (customerEmail || customerPhone || sendVia.includes('link'))) {
+        try {
+          const reviewRes = await fetch('/api/reviews/request', {
+            method: 'POST',
+            headers: authHeaders,
+            body: JSON.stringify({ jobId, customerName, customerEmail, customerPhone, sendVia })
+          });
+          const reviewData = await reviewRes.json();
+          if (reviewData.success) {
+            let msg = '✅ Job uploaded! Review request sent';
+            if (reviewData.results?.email === 'demo') msg += ' (email demo mode)';
+            if (reviewData.results?.sms === 'demo') msg += ' (SMS demo mode)';
+            if (reviewData.reviewUrl) {
+              showToast(msg, 'success');
+              // Show link in a toast-style
+              setTimeout(() => {
+                const linkMsg = `🔗 Review link: ${reviewData.reviewUrl}`;
+                console.log(linkMsg);
+                showToast('Review link copied to console!', 'info');
+              }, 2000);
+            } else {
+              showToast(msg, 'success');
+            }
+          } else {
+            showToast('Job uploaded! Review request: ' + reviewData.message, 'info');
+          }
+        } catch {
+          showToast('Job uploaded! (Review request failed)', 'info');
+        }
+      } else {
+        showToast('Job uploaded successfully! 🎉', 'success');
+      }
+
+      setTimeout(() => { resetUploadForm(); switchPanel('jobs'); }, 1200);
+    } else {
+      showToast(data.message || 'Upload failed.', 'error');
+    }
+  } catch (err) {
+    clearInterval(progTimer);
+    showToast('Upload error: ' + err.message, 'error');
+  } finally {
+    btn.innerHTML = '<i class="fas fa-upload"></i> Upload Job';
+    btn.disabled = false;
+    setTimeout(() => { progressEl.style.display = 'none'; progressFill.style.width = '0%'; }, 1500);
+  }
+});
+
+function resetUploadForm() {
+  document.getElementById('uploadForm').reset();
+  document.getElementById('uploadPreview').style.display = 'none';
+  document.querySelectorAll('.cat-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('categoryInput').value = '';
+  document.getElementById('titleCount').textContent = '0';
+  document.getElementById('descCount').textContent = '0';
+  document.getElementById('reviewLinkPreview').style.display = 'none';
+}
+
+// ── Jobs Table ──
+let allJobs = [];
+
+async function loadJobsTable() {
+  try {
+    const [jobsRes, reviewsRes] = await Promise.all([
+      fetch('/api/admin/jobs', { headers: authHeaders }),
+      fetch('/api/reviews', { headers: authHeaders })
+    ]);
+    const jobsData = await jobsRes.json();
+    const reviewsData = await reviewsRes.json();
+    allJobs = jobsData.jobs || [];
+    const reviews = reviewsData.reviews || [];
+    renderJobsTable(allJobs, reviews);
+  } catch {
+    document.getElementById('jobsTableBody').innerHTML = '<tr><td colspan="7" class="no-jobs">Failed to load.</td></tr>';
+  }
+}
+
+function renderJobsTable(jobs, reviews = []) {
+  const tbody = document.getElementById('jobsTableBody');
+  if (jobs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="no-jobs">No jobs found. <button class="btn btn-primary btn-sm" data-action="panel-upload">Upload first job</button></td></tr>';
+    return;
+  }
+  tbody.innerHTML = jobs.map(job => {
+    const review = reviews.find(r => r.jobId === job.id);
+    let reviewCell = '';
+    if (review && review.status === 'submitted') {
+      reviewCell = `<span style="color:#28a745;font-size:13px;">${starsHTML(review.rating)}</span>`;
+    } else if (review && review.status === 'pending') {
+      reviewCell = `<span style="color:#6c757d;font-size:12px;">⏳ Pending</span>
+        <button class="btn-review sent" data-action="resend-review" data-id="${review.id}" title="Resend">↩ Resend</button>`;
+    } else {
+      reviewCell = `<button class="btn-review" data-action="request-review" data-id="${job.id}">⭐ Request</button>`;
+    }
+    return `<tr>
+      <td><img src="${job.thumbnail_url || job.image_url}" onerror="this.src='${placeholderImg()}'"/></td>
+      <td style="font-weight:600;max-width:180px;">${job.title}</td>
+      <td><span class="cat-badge">${job.category}</span></td>
+      <td style="font-size:12px;color:var(--gray-dark);">${job.customerName || '<span style="color:#ccc;">—</span>'}</td>
+      <td style="font-size:12px;color:var(--gray-dark);white-space:nowrap;">${formatDate(job.date)}</td>
+      <td>${reviewCell}</td>
+      <td><div class="action-btns">
+        <button class="btn-edit" data-action="edit-job" data-id="${job.id}">✏️ Edit</button>
+        <button class="btn-delete" data-action="delete-job" data-id="${job.id}" data-title="${job.title.replace(/"/g, '&quot;')}">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+document.getElementById('jobSearch').addEventListener('input', filterJobs);
+document.getElementById('catFilter').addEventListener('change', filterJobs);
+
+function filterJobs() {
+  const q = document.getElementById('jobSearch').value.toLowerCase();
+  const cat = document.getElementById('catFilter').value;
+  const filtered = allJobs.filter(j => {
+    const mq = !q || j.title.toLowerCase().includes(q) || j.category.toLowerCase().includes(q);
+    const mc = !cat || j.category === cat;
+    return mq && mc;
+  });
+  renderJobsTable(filtered);
+}
+
+// ── Customers ──
+let allCustomers = [];
+
+async function loadCustomers() {
+  const tbody = document.getElementById('customersTableBody');
+  try {
+    const [customersRes, jobsRes] = await Promise.all([
+      fetch('/api/admin/customers', { headers: authHeaders }),
+      fetch('/api/admin/jobs', { headers: authHeaders })
+    ]);
+    const customersData = await customersRes.json();
+    const jobsData = await jobsRes.json();
+    if (!customersRes.ok || !jobsRes.ok) throw new Error(customersData.message || 'Failed to load customers.');
+    allCustomers = customersData.customers || [];
+    allJobsCache = jobsData.jobs || allJobsCache;
+    renderCustomers();
+  } catch (error) {
+    tbody.innerHTML = `<tr><td class="no-jobs" colspan="4">${escapeHTML(error.message)}</td></tr>`;
+  }
+}
+
+function renderCustomers() {
+  const query = document.getElementById('customerSearch').value.trim().toLowerCase();
+  const customers = allCustomers.filter(customer =>
+    `${customer.firstName} ${customer.lastName} ${customer.email} ${customer.phone}`.toLowerCase().includes(query)
+  );
+  const tbody = document.getElementById('customersTableBody');
+  if (!customers.length) {
+    tbody.innerHTML = `<tr><td class="no-jobs" colspan="4">${allCustomers.length ? 'No matching customers.' : 'No customers saved yet.'}</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = customers.map(customer => {
+    const jobCount = allJobsCache.filter(job => job.customerId === customer.id).length;
+    return `<tr>
+      <td style="font-weight:600;">${escapeHTML(`${customer.firstName} ${customer.lastName}`.trim())}</td>
+      <td>${escapeHTML(customer.email || '—')}</td>
+      <td>${escapeHTML(customer.phone || '—')}</td>
+      <td>${jobCount}</td>
+    </tr>`;
+  }).join('');
+}
+
+document.getElementById('customerSearch').addEventListener('input', renderCustomers);
+document.getElementById('customerForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const values = Object.fromEntries(new FormData(form));
+  if (!values.email.trim() && !values.phone.trim()) {
+    showToast('Enter an email address or phone number.', 'error');
+    return;
+  }
+  try {
+    const response = await fetch('/api/admin/customers', {
+      method: 'POST',
+      headers: authHeaders,
+      body: JSON.stringify(values)
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || 'Could not save customer.');
+    form.reset();
+    showToast('Customer saved.', 'success');
+    await loadCustomers();
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+});
+
+// ── Reviews Panel ──
+let allReviews = [];
+let reviewFilter = 'all';
+
+async function loadReviews() {
+  try {
+    const res = await fetch('/api/reviews', { headers: authHeaders });
+    const data = await res.json();
+    allReviews = data.reviews || [];
+    renderReviews();
+    renderAvgRating();
+  } catch {
+    document.getElementById('reviewsList').innerHTML = '<div class="no-jobs">Failed to load reviews.</div>';
+  }
+}
+
+function renderAvgRating() {
+  const submitted = allReviews.filter(r => r.status === 'submitted' && r.rating);
+  if (submitted.length === 0) return;
+
+  const avg = submitted.reduce((s, r) => s + r.rating, 0) / submitted.length;
+  document.getElementById('avgRatingDisplay').style.display = 'flex';
+  document.getElementById('avgRatingNum').textContent = avg.toFixed(1);
+  document.getElementById('avgRatingStars').textContent = '⭐'.repeat(Math.round(avg));
+  document.getElementById('avgRatingLabel').textContent = `Based on ${submitted.length} review${submitted.length !== 1 ? 's' : ''}`;
+
+  // Breakdown
+  const breakdown = document.getElementById('ratingBreakdown');
+  breakdown.innerHTML = [5,4,3,2,1].map(star => {
+    const count = submitted.filter(r => r.rating === star).length;
+    const pct = submitted.length ? Math.round(count / submitted.length * 100) : 0;
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <span style="color:rgba(255,255,255,0.7);font-size:12px;width:40px;">${star}⭐</span>
+      <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
+        <div style="width:${pct}%;height:100%;background:var(--gold);border-radius:3px;"></div>
+      </div>
+      <span style="color:rgba(255,255,255,0.5);font-size:11px;width:28px;">${count}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderReviews() {
+  const el = document.getElementById('reviewsList');
+  let filtered = allReviews;
+  if (reviewFilter === 'submitted') filtered = allReviews.filter(r => r.status === 'submitted');
+  else if (reviewFilter === 'pending') filtered = allReviews.filter(r => r.status === 'pending');
+  else if (reviewFilter === '5') filtered = allReviews.filter(r => r.rating === 5);
+  else if (reviewFilter === '4') filtered = allReviews.filter(r => r.rating === 4);
+
+  if (filtered.length === 0) {
+    el.innerHTML = '<div class="no-jobs">No reviews found.</div>';
+    return;
+  }
+
+  el.innerHTML = filtered.map(r => {
+    const isSubmitted = r.status === 'submitted';
+    const deliveryInfo = [];
+    if (r.emailSent) deliveryInfo.push('✉️ Email sent');
+    if (r.smsSent) deliveryInfo.push('📱 SMS sent');
+    if (r.emailError) deliveryInfo.push(`❌ Email failed: ${r.emailError}`);
+    if (r.smsError) deliveryInfo.push(`❌ SMS failed: ${r.smsError}`);
+
+    return `<div class="review-row ${r.status}">
+      <div class="review-row-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <strong style="font-size:15px;">${r.customerName || 'Anonymous'}</strong>
+            <span class="review-status-badge ${isSubmitted ? 'status-submitted' : 'status-pending'}">
+              ${isSubmitted ? '✅ Submitted' : '⏳ Pending'}
+            </span>
+            ${r.featured ? '<span class="review-status-badge" style="background:rgba(201,168,76,0.15);color:#8B6914;">⭐ Featured</span>' : ''}
+          </div>
+          <div class="review-meta">
+            ${r.jobTitle} · ${r.jobCategory}
+            ${r.customerEmail ? ' · ' + r.customerEmail : ''}
+            ${r.customerPhone ? ' · ' + r.customerPhone : ''}
+          </div>
+          ${deliveryInfo.length ? `<div style="font-size:11px;color:var(--gray-dark);margin-top:4px;">${deliveryInfo.join(' · ')}</div>` : ''}
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          ${isSubmitted ? `<div class="review-stars">${starsHTML(r.rating)}</div>` : ''}
+          <div style="font-size:11px;color:var(--gray-dark);margin-top:4px;">
+            ${isSubmitted ? 'Submitted ' + formatDate(r.submittedAt) : 'Requested ' + formatDate(r.requestedAt)}
+          </div>
+        </div>
+      </div>
+      ${isSubmitted && r.reviewText ? `<div class="review-text">"${r.reviewText}"</div>` : ''}
+      ${!isSubmitted ? `<div style="font-size:12px;color:var(--gray-dark);margin-bottom:8px;">
+        🔗 Review link: <a href="/review/${r.reviewToken}" target="_blank" style="color:var(--gold);">/review/${r.reviewToken.substring(0,8)}...</a>
+        <button data-action="copy-link" data-path="/review/${r.reviewToken}" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:12px;margin-left:4px;">📋 Copy</button>
+      </div>` : ''}
+      <div class="review-actions">
+        ${!isSubmitted ? `<button class="btn btn-primary btn-sm" data-action="resend-review" data-id="${r.id}"><i class="fas fa-redo"></i> Resend</button>` : ''}
+        ${isSubmitted ? `<button class="btn btn-navy btn-sm" data-action="toggle-feature" data-id="${r.id}">${r.featured ? '★ Unfeature' : '☆ Feature'}</button>` : ''}
+        <button class="btn-delete" style="padding:6px 14px;border-radius:var(--radius-sm);font-size:12px;" data-action="delete-review" data-id="${r.id}">🗑️ Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.querySelectorAll('.review-filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.review-filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    reviewFilter = tab.dataset.filter;
+    renderReviews();
+  });
+});
+
+async function resendReview(reviewId) {
+  try {
+    const res = await fetch(`/api/reviews/resend/${reviewId}`, { method: 'POST', headers: authHeaders });
+    const data = await res.json();
+    showToast(data.success ? 'Review request resent! 📨' : data.message, data.success ? 'success' : 'error');
+  } catch { showToast('Resend failed.', 'error'); }
+}
+
+async function toggleFeature(reviewId) {
+  try {
+    const res = await fetch(`/api/reviews/${reviewId}/approve`, { method: 'PUT', headers: authHeaders });
+    const data = await res.json();
+    showToast(data.featured ? 'Review featured! ⭐' : 'Review unfeatured.', 'success');
+    loadReviews();
+  } catch { showToast('Action failed.', 'error'); }
+}
+
+async function deleteReview(reviewId) {
+  if (!confirm('Delete this review entry?')) return;
+  try {
+    const res = await fetch(`/api/reviews/${reviewId}`, { method: 'DELETE', headers: authHeaders });
+    const data = await res.json();
+    showToast(data.success ? 'Review deleted.' : data.message, data.success ? 'info' : 'error');
+    if (data.success) loadReviews();
+  } catch { showToast('Delete failed.', 'error'); }
+}
+
+function copyLink(path) {
+  const url = window.location.origin + path;
+  navigator.clipboard.writeText(url).then(() => showToast('Link copied! 📋', 'success')).catch(() => showToast('Copy failed.', 'error'));
+}
+
+// ── Send Review Modal ──
+function openReviewModal(jobId) {
+  const job = allJobs.find(j => j.id === jobId);
+  document.getElementById('reviewJobId').value = jobId;
+  document.getElementById('reviewModalJobInfo').innerHTML = job
+    ? `<strong>${job.title}</strong> · <span class="cat-badge">${job.category}</span> · ${formatDate(job.date)}`
+    : '';
+  document.getElementById('reviewCustomerName').value = job?.customerName || '';
+  document.getElementById('reviewCustomerEmail').value = job?.customerEmail || '';
+  document.getElementById('reviewCustomerPhone').value = job?.customerPhone || '';
+  document.getElementById('reviewLinkResult').style.display = 'none';
+  document.getElementById('reviewModal').classList.add('active');
+}
+
+document.getElementById('reviewModalClose').addEventListener('click', () => document.getElementById('reviewModal').classList.remove('active'));
+document.getElementById('reviewCancelBtn').addEventListener('click', () => document.getElementById('reviewModal').classList.remove('active'));
+
+document.getElementById('reviewRequestForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const sendVia = [];
+  if (document.getElementById('modalSendEmail').checked) sendVia.push('email');
+  if (document.getElementById('modalSendSMS').checked) sendVia.push('sms');
+  if (document.getElementById('modalSendLink').checked) sendVia.push('link');
+  if (sendVia.length === 0) { showToast('Select at least one delivery method.', 'error'); return; }
+
+  const btn = document.getElementById('sendReviewBtn');
+  btn.innerHTML = '<span class="spinner"></span> Sending...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/reviews/request', {
+      method: 'POST',
+      headers: authHeaders,
+      body: JSON.stringify({
+        jobId: document.getElementById('reviewJobId').value,
+        customerName: document.getElementById('reviewCustomerName').value,
+        customerEmail: document.getElementById('reviewCustomerEmail').value,
+        customerPhone: document.getElementById('reviewCustomerPhone').value,
+        sendVia
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      const resultEl = document.getElementById('reviewLinkResult');
+      let html = `<strong>✅ Review request sent!</strong><br/>`;
+      if (data.results?.email === 'demo') html += `📧 Email: Demo mode (configure SMTP to send real emails)<br/>`;
+      else if (data.results?.email === 'sent') html += `📧 Email: Sent successfully<br/>`;
+      if (data.results?.sms === 'demo') html += `📱 SMS: Demo mode (configure Twilio to send real SMS)<br/>`;
+      else if (data.results?.sms === 'sent') html += `📱 SMS: Sent successfully<br/>`;
+      html += `<br/>🔗 <strong>Review Link:</strong> <a href="${data.reviewUrl}" target="_blank">${data.reviewUrl}</a>
+        <button data-action="copy-link" data-path="${new URL(data.reviewUrl).pathname}" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:12px;margin-left:4px;">📋 Copy</button>`;
+      resultEl.innerHTML = html;
+      resultEl.style.display = 'block';
+      showToast('Review request sent! 🎉', 'success');
+      loadJobsTable();
+    } else {
+      showToast(data.message || 'Failed to send.', 'error');
+    }
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  } finally {
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
+    btn.disabled = false;
+  }
+});
+
+// ── Edit Modal ──
+function openEditModal(id) {
+  const job = allJobs.find(j => j.id === id);
+  if (!job) return;
+  document.getElementById('editJobId').value = job.id;
+  document.getElementById('editTitle').value = job.title;
+  document.getElementById('editCategory').value = job.category;
+  document.getElementById('editDate').value = job.date || '';
+  document.getElementById('editDesc').value = job.description || '';
+  document.getElementById('editModal').classList.add('active');
+}
+document.getElementById('editModalClose').addEventListener('click', () => document.getElementById('editModal').classList.remove('active'));
+document.getElementById('editCancelBtn').addEventListener('click', () => document.getElementById('editModal').classList.remove('active'));
+document.getElementById('editForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('editJobId').value;
+  try {
+    const res = await fetch('/api/admin/jobs/' + id, {
+      method: 'PUT', headers: authHeaders,
+      body: JSON.stringify({
+        title: document.getElementById('editTitle').value,
+        category: document.getElementById('editCategory').value,
+        date: document.getElementById('editDate').value,
+        description: document.getElementById('editDesc').value
+      })
+    });
+    const data = await res.json();
+    if (data.success) { showToast('Job updated!', 'success'); document.getElementById('editModal').classList.remove('active'); loadJobsTable(); }
+    else showToast(data.message || 'Update failed.', 'error');
+  } catch { showToast('Update error.', 'error'); }
+});
+
+// ── Delete Modal ──
+let deleteTargetId = null;
+function openDeleteModal(id, title) {
+  deleteTargetId = id;
+  document.getElementById('deleteJobTitle').textContent = title;
+  document.getElementById('deleteModal').classList.add('active');
+}
+document.getElementById('deleteModalClose').addEventListener('click', () => document.getElementById('deleteModal').classList.remove('active'));
+document.getElementById('deleteCancelBtn').addEventListener('click', () => document.getElementById('deleteModal').classList.remove('active'));
+document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+  if (!deleteTargetId) return;
+  try {
+    const res = await fetch('/api/admin/jobs/' + deleteTargetId, { method: 'DELETE', headers: authHeaders });
+    const data = await res.json();
+    if (data.success) { showToast('Job deleted.', 'info'); document.getElementById('deleteModal').classList.remove('active'); loadJobsTable(); loadOverview(); }
+    else showToast(data.message || 'Delete failed.', 'error');
+  } catch { showToast('Delete error.', 'error'); }
+  deleteTargetId = null;
+});
+
+// ── Init ──
+loadOverview();
+</script>
+</body>
+</html>

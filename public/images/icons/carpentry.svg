@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="12" fill="#0a1628" opacity="0"/>
+  <!-- Hammer -->
+  <rect x="28" y="8" width="8" height="20" rx="2" fill="#c9a84c"/>
+  <rect x="20" y="8" width="24" height="10" rx="3" fill="#0a1628"/>
+  <!-- Handle -->
+  <rect x="30" y="26" width="4" height="28" rx="2" fill="#8B6914"/>
+  <!-- Chisel -->
+  <rect x="10" y="38" width="30" height="4" rx="2" fill="#c9a84c" transform="rotate(-30 10 38)"/>
+  <polygon points="10,38 6,44 14,42" fill="#0a1628"/>
+</svg>
